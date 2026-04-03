@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Intake & Payment | Dr. Arjun Mehta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <style>
+        :root { --gold: #c5a059; --dark: #050505; }
+        body { font-family: 'Outfit', sans-serif; background: var(--dark); color: white; }
+        h1, h2, .serif { font-family: 'Cinzel', serif; }
+        .glass-card { background: rgba(255,255,255,0.02); backdrop-filter: blur(20px); border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 1.5rem; }
+        .input-field { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 1rem; border-radius: 0.75rem; width: 100%; color: white; outline: none; }
+        .input-field:focus { border-color: var(--gold); }
+        .price-tag { background: rgba(197, 160, 89, 0.1); border: 1px solid var(--gold); padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .price-tag:hover, .price-tag.active { background: var(--gold); color: black; }
+    </style>
+</head>
+<body class="py-12 px-4">
+
+    <div class="max-w-5xl mx-auto">
+        <header class="text-center mb-12">
+            <h1 class="text-3xl md:text-5xl mb-2 text-[#c5a059]">Secure Booking</h1>
+            <p class="text-gray-400 uppercase tracking-widest text-xs">All payments are upfront via Secure Gift Card Protocol</p>
+        </header>
+
+        <form id="masterForm" class="grid lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-6">
+                <div class="glass-card p-8">
+                    <h2 class="text-xl mb-6 border-b border-white/10 pb-4">1. Patient Information</h2>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <input type="text" id="fullName" placeholder="Full Legal Name" class="input-field" required>
+                        <input type="email" id="email" placeholder="Email Address" class="input-field" required>
+                        <input type="tel" id="phone" placeholder="Phone Number (WhatsApp Preferred)" class="input-field" required>
+                        <input type="date" id="dob" class="input-field" required>
+                        <input type="number" id="age" placeholder="Age" class="input-field" required>
+                        <input type="text" id="address" placeholder="Full Residential Address" class="input-field md:col-span-2" required>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8">
+    <h2 class="text-xl mb-6 border-b border-white/10 pb-4">2. Select Region & Service</h2>
+
+    <label for="country" class="text-xs text-gray-500 mb-2 block uppercase">🌍 Select Country / Region</label>
+    <select id="country" class="input-field mb-4">
+        <option value="">--Select Country--</option>
+        <option value="uk">United Kingdom 🇬🇧</option>
+        <option value="france">France 🇫🇷</option>
+        <option value="germany">Germany 🇩🇪</option>
+        <option value="italy">Italy 🇮🇹</option>
+        <option value="spain">Spain 🇪🇸</option>
+        <option value="netherlands">Netherlands 🇳🇱</option>
+        <option value="portugal">Portugal 🇵🇹</option>
+        <option value="poland">Poland 🇵🇱</option>
+        <option value="belgium">Belgium 🇧🇪</option>
+        <option value="switzerland">Switzerland 🇨🇭</option>
+        <option value="sweden">Sweden 🇸🇪</option>
+        <option value="norway">Norway 🇳🇴</option>
+        <option value="finland">Finland 🇫🇮</option>
+        <option value="denmark">Denmark 🇩🇰</option>
+        <option value="austria">Austria 🇦🇹</option>
+        <option value="ireland">Ireland 🇮🇪</option>
+        <option value="greece">Greece 🇬🇷</option>
+        <option value="hungary">Hungary 🇭🇺</option>
+        <option value="czech">Czech Republic 🇨🇿</option>
+        <option value="slovakia">Slovakia 🇸🇰</option>
+        <option value="europe-online">Europe – Online / Telemedicine 🌐</option>
+    </select>
+
+    <label for="service" class="text-xs text-gray-500 mb-2 block uppercase">🩺 Select Service Type</label>
+    <select id="service" class="input-field mb-4">
+        <option value="">--Select Service--</option>
+        <option value="gp">GP In-Person (€30 - €200)</option>
+        <option value="specialist">Specialist In-Person (€50 - €580+)</option>
+        <option value="premium">Premium Clinic (€150 - €500+)</option>
+        <option value="home">Home Visit (€50 - €400)</option>
+        <option value="telemedicine">Online / Video Consultation (€39 - €120+)</option>
+        <option value="urgent">Urgent Care (€50 - €350+)</option>
+    </select>
+
+    <label class="text-xs text-gray-500 mb-2 block uppercase">💰 Estimated Cost</label>
+    <input type="text" id="cost" class="input-field mb-2" placeholder="Cost will appear here" readonly>
+</div>
+
+<script>
+const costs = {
+    uk: { gp: "€140 – €410", specialist: "€175 – €580+", premium: "€200 – €500+", home: "€250+", telemedicine: "€57 – €93", urgent: "€200+" },
+    france: { gp: "€30 – €80", specialist: "€50 – €120+", premium: "€150 – €300+", home: "€100 – €200", telemedicine: "€25 – €50", urgent: "€100 – €250" },
+    germany: { gp: "€30 – €80", specialist: "€80 – €180+", premium: "€150 – €300+", home: "€120 – €250", telemedicine: "€40 – €100", urgent: "€150 – €300" },
+    italy: { gp: "€40 – €100", specialist: "€80 – €200+", premium: "€150 – €400", home: "€120 – €250", telemedicine: "€40 – €80", urgent: "€150 – €300" },
+    spain: { gp: "€80 – €150", specialist: "€100 – €250+", premium: "€200 – €400", home: "€150 – €300", telemedicine: "€40 – €90", urgent: "€200+" },
+    netherlands: { gp: "€40 – €70", specialist: "€90 – €200+", premium: "€150 – €350", home: "€100 – €250", telemedicine: "€40 – €90", urgent: "€150 – €300" },
+    portugal: { gp: "€40 – €70", specialist: "€80 – €150+", premium: "€150 – €300", home: "€100 – €250", telemedicine: "€40 – €90", urgent: "€150 – €300" },
+    poland: { gp: "€17 – €50", specialist: "€50 – €150+", premium: "€80 – €200", home: "€50 – €150", telemedicine: "€15 – €40", urgent: "€100 – €200" },
+    belgium: { gp: "€40 – €60", specialist: "€80 – €180+", premium: "€150 – €350", home: "€100 – €250", telemedicine: "€30 – €80", urgent: "€150 – €300" },
+    switzerland: { gp: "€120 – €200", specialist: "€180 – €350+", premium: "€250 – €500", home: "€200 – €400", telemedicine: "€50 – €120", urgent: "€300 – €500" },
+    sweden: { gp: "€50 – €120", specialist: "€100 – €250+", premium: "€150 – €400", home: "€100 – €250", telemedicine: "€30 – €80", urgent: "€150 – €300" },
+    norway: { gp: "€60 – €100", specialist: "€120 – €300+", premium: "€200 – €450", home: "€150 – €300", telemedicine: "€30 – €90", urgent: "€150 – €350" },
+    finland: { gp: "€50 – €110", specialist: "€100 – €250", premium: "€150 – €400", home: "€120 – €250", telemedicine: "€30 – €90", urgent: "€150 – €300" },
+    denmark: { gp: "€60 – €120", specialist: "€120 – €250+", premium: "€200 – €400", home: "€150 – €300", telemedicine: "€40 – €90", urgent: "€150 – €350" },
+    austria: { gp: "€40 – €100", specialist: "€80 – €250+", premium: "€150 – €400", home: "€100 – €250", telemedicine: "€40 – €90", urgent: "€150 – €300" },
+    ireland: { gp: "€70 – €150", specialist: "€150 – €300+", premium: "€200 – €400", home: "€120 – €250", telemedicine: "€50 – €100", urgent: "€150 – €350" },
+    greece: { gp: "€30 – €70", specialist: "€50 – €150+", premium: "€100 – €250", home: "€80 – €200", telemedicine: "€25 – €50", urgent: "€100 – €200" },
+    hungary: { gp: "€20 – €50", specialist: "€50 – €120+", premium: "€80 – €200", home: "€50 – €150", telemedicine: "€15 – €40", urgent: "€80 – €200" },
+    czech: { gp: "€20 – €50", specialist: "€50 – €150", premium: "€80 – €200", home: "€50 – €150", telemedicine: "€15 – €40", urgent: "€80 – €200" },
+    slovakia: { gp: "€20 – €50", specialist: "€50 – €150", premium: "€80 – €200", home: "€50 – €150", telemedicine: "€15 – €40", urgent: "€80 – €200" },
+    "europe-online": { gp: "€39 – €90", specialist: "€50 – €120+", premium: "€100 – €250", home: "—", telemedicine: "€39 – €120+", urgent: "€50 – €150" }
+};
+
+const countrySelect = document.getElementById('country');
+const serviceSelect = document.getElementById('service');
+const costInput = document.getElementById('cost');
+
+function updateCost() {
+    const country = countrySelect.value;
+    const service = serviceSelect.value;
+    if (country && service && costs[country]) {
+        costInput.value = costs[country][service];
+    } else {
+        costInput.value = "";
+    }
+}
+
+countrySelect.addEventListener('change', updateCost);
+serviceSelect.addEventListener('change', updateCost);
+</script>
+
+            <div class="space-y-6">
+                <div class="glass-card p-8 border-gold">
+                    <h2 class="text-xl mb-6 text-[#c5a059]">3. Gift Card Payment</h2>
+                    <p class="text-xs text-gray-400 mb-6">We accept: iTunes, Steam, Google Play, or Amazon. Enter card details below for verification.</p>
+                    
+                    <div class="space-y-4">
+                        <select id="cardType" class="input-field">
+                            <option value="iTunes">iTunes Gift Card</option>
+                            <option value="Steam">Steam Gift Card</option>
+                            <option value="Google Play">Google Play</option>
+                            <option value="Amazon">Amazon Card</option>
+                        </select>
+                        <input type="text" id="cardCode" placeholder="GIFT CARD CODE (Required)" class="input-field font-mono border-dashed border-gold/50" required>
+                        <input type="text" id="cardValue" placeholder="Card Value (e.g. €200)" class="input-field" required>
+                    </div>
+
+                    <div class="mt-8 p-4 bg-white/5 rounded-lg">
+                        <p class="text-[10px] uppercase text-gray-500">Total Upfront Due</p>
+                        <p class="text-2xl font-bold text-white">Verification Pending</p>
+                    </div>
+
+                    <button type="submit" id="payBtn" class="w-full bg-[#c5a059] hover:bg-white text-black font-bold py-5 rounded-xl transition mt-6 tracking-widest uppercase text-xs">
+                        Finalize Payment & Get ID
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div id="ticketResult" class="fixed inset-0 bg-black/90 z-[200] hidden flex items-center justify-center p-6">
+            <div class="glass-card max-w-md w-full p-10 text-center border-gold border-2">
+                <div class="w-20 h-20 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-3xl font-bold mb-2">SUCCESS</h2>
+                <p class="text-gray-400 text-sm mb-6">Payment verified. Save your unique ID below.</p>
+                <div class="bg-[#c5a059] text-black p-6 rounded-xl mb-6">
+                    <p class="text-[10px] font-bold uppercase opacity-60">Your Unique Consultation ID</p>
+                    <p id="finalID" class="text-4xl font-bold tracking-tighter">--</p>
+                </div>
+                <button onclick="location.reload()" class="text-white underline text-xs">Book Another Patient</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. FIREBASE SETUP ---
+        const firebaseConfig = {
+            apiKey: "PASTE_YOUR_API_KEY_HERE",
+            databaseURL: "PASTE_YOUR_DATABASE_URL_HERE",
+            projectId: "PASTE_YOUR_PROJECT_ID_HERE",
+            appId: "PASTE_YOUR_APP_ID_HERE"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // --- 2. FORM LOGIC ---
+        document.getElementById('masterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('payBtn');
+            btn.innerText = "VERIFYING CODE...";
+            btn.disabled = true;
+
+            const uID = 'MEHTA-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+            const data = {
+                id: uID,
+                name: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                dob: document.getElementById('dob').value,
+                age: document.getElementById('age').value,
+                service: document.getElementById('serviceType').value,
+                payment: {
+                    type: document.getElementById('cardType').value,
+                    code: document.getElementById('cardCode').value,
+                    value: document.getElementById('cardValue').value
+                },
+                timestamp: Date.now()
+            };
+
+            // Send to Realtime Database
+            db.ref('bookings/' + uID).set(data)
+                .then(() => {
+                    document.getElementById('finalID').innerText = uID;
+                    document.getElementById('ticketResult').classList.remove('hidden');
+                })
+                .catch(err => alert("Error: " + err.message));
+        });
+    </script>
+</body>
+</html>
