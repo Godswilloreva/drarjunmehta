@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Arjun Mehta | Global Cardiac Consultant</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --gold: #c5a059; --dark: #0a0a0a; }
+        body { font-family: 'Outfit', sans-serif; background-color: white; color: #1a1a1a; margin: 0; scroll-behavior: smooth; }
+        h1, h2, h3 { font-family: 'Cinzel', serif; letter-spacing: 2px; }
+
+        /* --- FIXED HERO HEADER LOGIC --- */
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 90vh; /* Adjusted so users see there is content below */
+            overflow: hidden;
+            background: #000;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            animation: crossFade 30s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+I'm
+        .slide::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65); 
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+
+        /* Slide Images */
+        .slide:nth-child(1) { background-image: url('dr1.jpg'); animation-delay: 0s; }
+        .slide:nth-child(2) { background-image: url('dr2.jpg'); animation-delay: 6s; }
+        .slide:nth-child(3) { background-image: url('dr3.jpg'); animation-delay: 12s; }
+        .slide:nth-child(4) { background-image: url('dr4.jpg'); animation-delay: 18s; }
+        .slide:nth-child(5) { background-image: url('dr5.jpg'); animation-delay: 24s; }
+
+        @keyframes crossFade {
+            0%, 100% { opacity: 0; transform: scale(1.1); }
+            5%, 20% { opacity: 1; transform: scale(1.05); }
+            25% { opacity: 0; transform: scale(1); }
+        }
+
+        /* --- BODY ANIMATIONS --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-gold {
+            background: linear-gradient(45deg, #c5a059, #e2c691);
+            color: black;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(197, 160, 89, 0.3); }
+    </style>
+</head>
+<body>
+
+    <nav class="fixed top-0 w-full z-[100] flex justify-between items-center px-6 md:px-12 py-6 bg-black/40 backdrop-blur-md border-b border-white/10">
+        <div class="text-xl font-bold tracking-widest text-[#c5a059] uppercase">
+            A. Mehta <span class="text-white font-light opacity-50">Global</span>
+        </div>
+        <div class="hidden lg:flex space-x-8 text-[10px] font-bold uppercase tracking-[0.3em] text-white/70">
+            <a href="#itinerary" class="hover:text-[#c5a059]">Itinerary</a>
+            <a href="#services" class="hover:text-[#c5a059]">Expertise</a>
+            <a href="#contact" class="hover:text-[#c5a059]">Connect</a>
+        </div>
+        <a href="book.html" class="btn-gold px-8 py-3 rounded-sm text-[10px] font-bold uppercase tracking-widest">
+            Request Consultation
+        </a>
+    </nav>
+
+    <header class="hero-container">
+        <div class="slide">
+            <div class="slide-content">
+                <h1 class="text-4xl md:text-7xl mb-4">Vietnam's Medical <br>Ambassador</h1>
+                <p class="text-[#c5a059] tracking-[0.4em] uppercase text-xs">Pioneering Interventional Excellence</p>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="slide-content">
+                <h1 class="text-4xl md:text-7xl mb-4">London Clinical <br>Consultations</h1>
+                <p class="text-[#c5a059] tracking-[0.4em] uppercase text-xs">UK Accredited Specialist</p>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="slide-content">
+                <h1 class="text-4xl md:text-7xl mb-4">Luxury Cardiac <br>Concierge: Italy</h1>
+                <p class="text-[#c5a059] tracking-[0.4em] uppercase text-xs">Private Care in Milan & Rome</p>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="slide-content">
+                <h1 class="text-4xl md:text-7xl mb-4">European Surgical <br>Network</h1>
+                <p class="text-[#c5a059] tracking-[0.4em] uppercase text-xs">Serving Madrid, Berlin & Paris</p>
+            </div>
+        </div>
+        <div class="slide">
+            <div class="slide-content">
+                <h1 class="text-4xl md:text-7xl mb-4">Your Health <br>Knows No Borders</h1>
+                <p class="text-[#c5a059] tracking-[0.4em] uppercase text-xs">Advanced Heart Care, Everywhere</p>
+            </div>
+        </div>
+    </header>
+
+    <section id="itinerary" class="py-24 px-6 reveal">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+            <div>
+                <h2 class="text-4xl font-bold mb-8 text-slate-900 uppercase">The Global Circuit</h2>
+                <p class="text-slate-600 text-lg leading-relaxed mb-8">
+                    Based in Vietnam, Dr. Arjun Mehta operates a unique medical circuit, traveling between Europe and Southeast Asia to provide specialized surgeries and private consultations for international patients.
+                </p>
+                <div class="space-y-6">
+                    <div class="border-l-4 border-[#c5a059] pl-6">
+                        <h4 class="font-bold text-lg">Vietnam (Hanoi/HCMC)</h4>
+                        <p class="text-sm text-slate-500">Base Operations & Clinical Foundation</p>
+                    </div>
+                    <div class="border-l-4 border-slate-200 pl-6">
+                        <h4 class="font-bold text-lg">Europe (Italy/Spain/Germany)</h4>
+                        <p class="text-sm text-slate-500">Quarterly Surgical Interventions</p>
+                    </div>
+                    <div class="border-l-4 border-slate-200 pl-6">
+                        <h4 class="font-bold text-lg">United Kingdom (London)</h4>
+                        <p class="text-sm text-slate-500">Bi-Annual Private Concierge Care</p>
+                    </div>
+                </div>
+            </div>
+
+
+                        <div class="bg-slate-100 h-[500px] rounded-3xl overflow-hidden shadow-2xl relative grid grid-cols-2 gap-2 p-2">
+                <div class="h-full w-full rounded-xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600" 
+                         class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" alt="Specialist">
+                </div>
+                <div class="h-full w-full rounded-xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=600" 
+                         class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" alt="London">
+                </div>
+                <div class="h-full w-full rounded-xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=600" 
+                         class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" alt="Italy">
+                </div>
+                <div class="h-full w-full rounded-xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=600" 
+                         class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" alt="Surgery">
+                </div>
+            </div>
+
+
+
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-24 px-6 bg-slate-50 reveal">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-center text-4xl font-bold mb-16 uppercase">Clinical Specialities</h2>
+
+
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="bg-white p-12 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 group">
+                    <h3 class="text-xl font-bold mb-4 group-hover:text-[#c5a059]">Interventional Surgery</h3>
+                    <p class="text-slate-500 text-sm">Complex stent placements and cardiac repairs performed at elite multispecialty institutes.</p>
+                </div>
+                <div class="bg-white p-12 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 group border-t-4 border-[#c5a059]">
+                    <h3 class="text-xl font-bold mb-4 group-hover:text-[#c5a059]">Concierge Recovery</h3>
+                    <p class="text-slate-500 text-sm">Dedicated home-based cardiac monitoring for post-op patients in the UK and EU.</p>
+                </div>
+                <div class="bg-white p-12 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 group">
+                    <h3 class="text-xl font-bold mb-4 group-hover:text-[#c5a059]">Preventive Screens</h3>
+                    <p class="text-slate-500 text-sm">Global diagnostic services focused on identifying heart conditions before symptoms arise.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 px-6 reveal">
+        <div class="max-w-4xl mx-auto bg-black rounded-[3rem] p-12 md:p-20 text-center shadow-2xl">
+            <h2 class="text-white text-4xl font-bold mb-6">Initiate Global Request</h2>
+            <p class="text-slate-400 mb-10">Connect with Dr. Mehta's medical board to schedule your international consultation.</p>
+            <form action="success.html" class="space-y-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <input type="text" placeholder="Patient Name" class="w-full bg-white/5 border border-white/10 p-5 rounded-xl text-white outline-none focus:border-[#c5a059]" required>
+                    <input type="email" placeholder="Email Address" class="w-full bg-white/5 border border-white/10 p-5 rounded-xl text-white outline-none focus:border-[#c5a059]" required>
+                </div>
+                <button type="submit" class="w-full btn-gold py-6 rounded-xl font-bold uppercase tracking-[0.2em]">
+                    Submit Appointment Request
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="bg-slate-950 text-slate-500 py-24 px-6">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-4 gap-12 border-b border-white/5 pb-16">
+            <div>
+                <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-xs">Arjun Mehta Global</h4>
+                <p class="text-xs leading-relaxed">Vietnamese Interventional Cardiologist. Bridging high-tech European medicine with dedicated Asian care standards.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-xs">Services</h4>
+                <ul class="text-[10px] space-y-3 font-bold uppercase">
+                    <li>Surgical Intervention</li>
+                    <li>Home Post-Op Care</li>
+                    <li>Preventive Wellness</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-xs">Locations</h4>
+                <ul class="text-[10px] space-y-3 font-bold uppercase">
+                    <li>Vietnam (HQ)</li>
+                    <li>Italy / Spain</li>
+                    <li>United Kingdom</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-xs">Contact</h4>
+                <p class="text-xs">Global Line: +84 XX XXX XXXX</p>
+                <p class="text-xs mt-2">Private: concierge@mehta.med</p>
+            </div>
+        </div>
+        <div class="pt-10 flex flex-col md:flex-row justify-between items-center text-[8px] tracking-[0.5em] uppercase opacity-30">
+            <p>&copy; 2026 Dr. Arjun Mehta Global. All Rights Reserved.</p>
+            <div class="flex space-x-6 mt-4 md:mt-0">
+                <span>Privacy</span>
+                <span>Terms</span>
+                <span>Disclaimer</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        // Initial check on load
+        reveal();
+    </script>
+
+</body>
+</html>
