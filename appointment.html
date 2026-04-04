@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background: #050505; color: white; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(197, 160, 89, 0.2); }
+        .verified-badge { background: linear-gradient(45deg, #10b981, #059669); color: white; padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: bold; }
+    </style>
+</head>
+<body class="py-20 px-6">
+    <div id="loading" class="text-center">Authenticating Medical ID...</div>
+    
+    <div id="app-content" class="max-w-3xl mx-auto hidden">
+        <div class="glass p-10 rounded-[3rem] text-center border-t-4 border-green-500">
+            <div class="flex justify-center mb-6">
+                <span class="verified-badge uppercase tracking-widest">Payment Confirmed & Verified</span>
+            </div>
+            
+            <h1 class="font-['Cinzel'] text-4xl mb-2" id="display_name">--</h1>
+            <p class="text-[#c5a059] font-bold text-sm mb-10" id="display_id">--</p>
+
+            <div class="grid md:grid-cols-2 gap-8 text-left border-y border-white/5 py-10 mb-10">
+                <div>
+                    <p class="text-[10px] uppercase text-gray-500 mb-1">Assigned Visit Date</p>
+                    <p class="font-bold text-lg text-green-400">Scheduled: Within 48 Hours</p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase text-gray-500 mb-1">Status</p>
+                    <p class="font-bold text-lg">Active Consultation</p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase text-gray-500 mb-1">Patient Address</p>
+                    <p class="text-sm opacity-70" id="display_address">--</p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase text-gray-500 mb-1">Consultation Type</p>
+                    <p class="text-sm opacity-70" id="display_service">--</p>
+                </div>
+            </div>
+
+            <div class="bg-white/5 p-6 rounded-2xl">
+                <p class="text-xs text-gray-400 italic">"Dr. Mehta’s medical board has received your Gift Card verification. Please keep your mobile phone active for the local coordinator's call."</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = { /* PASTE YOUR CONFIG HERE */ };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Get the ID we saved in localStorage
+        const patientID = localStorage.getItem('currentPatientID');
+
+        if (!patientID) {
+            document.getElementById('loading').innerHTML = "<span class='text-red-500'>Access Denied: No Verified ID Found.</span>";
+        } else {
+            // Fetch the data for this specific patient
+            get(ref(db, 'patients/' + patientID)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    document.getElementById('display_name').innerText = data.personal.name;
+                    document.getElementById('display_id').innerText = data.id;
+                    document.getElementById('display_address').innerText = data.personal.address;
+                    document.getElementById('display_service').innerText = data.service.type;
+                    
+                    document.getElementById('loading').classList.add('hidden');
+                    document.getElementById('app-content').classList.remove('hidden');
+                } else {
+                    document.getElementById('loading').innerHTML = "Record not found.";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
